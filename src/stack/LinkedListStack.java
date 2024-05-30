@@ -35,12 +35,19 @@ public class LinkedListStack<E> implements Stack<E> {
 
 	@Override
 	public void push(E element) {
-
+		Node<E> newNode = new Node<>(element);
+		newNode.next = top;
+		top = newNode;
 	}
 
 	@Override
 	public E pop() throws Underflow {
-		return null;
+		if (isEmpty()) {
+			throw new Underflow();
+		}
+		E data = top.data;
+		top = top.next;
+		return data;
 	}
 
 	/**
