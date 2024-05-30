@@ -4,6 +4,10 @@ public class LinkedListStack<E> implements Stack<E> {
 	private class Node<T> {
 		T data;
 		Node<T> next;
+		Node(T data) {
+			this.data = data;
+			this.next = null;
+		}
 		// implement the nodes here
 		/**
 		 * toString method that matches test cases for easy testing.
@@ -23,7 +27,10 @@ public class LinkedListStack<E> implements Stack<E> {
 
 	@Override
 	public E top() throws Underflow {
-		return null;
+		if (isEmpty()) {
+			throw new Underflow();
+		}
+		return top.data;
 	}
 
 	@Override
