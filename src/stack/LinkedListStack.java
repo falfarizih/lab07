@@ -22,8 +22,9 @@ public class LinkedListStack<E> implements Stack<E> {
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return top == null;
 	}
+
 
 	@Override
 	public E top() throws Underflow {

@@ -1,68 +1,53 @@
 package postfix;
 
 import stack.LinkedListStack;
+import stack.Stack;
 import stack.Underflow;
 
 public class Infix {
 
-    public String toPostfix(String infix) {
-        LinkedListStack<Character> stack = new LinkedListStack<>();
+    public String toPostfix(String infix) throws Underflow {
+        Stack<Character> operatorStack = new LinkedListStack<>();
         StringBuilder postfix = new StringBuilder();
-        char[] chars = infix.toCharArray();
+        char[] tokens = infix.toCharArray();
 
-        for (char c : chars) {
-            if (Character.isDigit(c)) {
-                postfix.append(c);
-            } else if (c == '(') {
-                stack.push(c);
-            } else if (c == ')') {
-                try {
-                    while (!stack.isEmpty() && stack.top() != '(') {
-                        postfix.append(stack.pop());
-                    }
-                    if (!stack.isEmpty() && stack.top() == '(') {
-                        stack.pop();
-                    }
-                } catch (Underflow e) {
-                    System.err.println("Stack underflow occurred while processing ')'");
+        for (char token : tokens) {
+            if (Character.isDigit(token)) {
+                postfix.append(token).append(' '); // Append operand with a space
+            } else if (token == '(') {
+                operatorStack.push(token);
+            } else if (token == ')') {
+                while (!operatorStack.isEmpty() && operatorStack.top() != '(') {
+                    postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
                 }
-            } else if (isOperator(c)) {
-                try {
-                    while (!stack.isEmpty() && precedence(c) <= precedence(stack.top())) {
-                        postfix.append(stack.pop());
-                    }
-                } catch (Underflow e) {
-                    System.err.println("Stack underflow occurred while processing operator");
+                operatorStack.pop(); // Remove the '(' from the stack
+            } else if (isOperator(token)) {
+                while (!operatorStack.isEmpty() && precedence(token) <= precedence(operatorStack.top())) {
+                    postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
                 }
-                stack.push(c);
+                operatorStack.push(token);
             }
         }
 
-        try {
-            while (!stack.isEmpty()) {
-                postfix.append(stack.pop());
-            }
-        } catch (Underflow e) {
-            System.err.println("Stack underflow occurred while emptying the stack");
+        while (!operatorStack.isEmpty()) {
+            postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
         }
 
-        return postfix.toString();
+        return postfix.toString().trim(); // Remove trailing space and return
     }
 
-    private static boolean isOperator(char c) {
+    private boolean isOperator(char c) {
         return c == '+' || c == '-' || c == '*' || c == '/';
     }
 
-    private static int precedence(char c) {
-        switch (c) {
-            case '+':
-            case '-':
-                return 1;
-            case '*':
-            case '/':
-                return 2;
-            default:
-                return -1;
+    private int precedence(char operator) {
+        if (operator == '+' || operator == '-') {
+            return 1;
+        } else if (operator == '*' || operator == '/') {
+            return 2;
+        } else {
+            return -1;
         }
     }
+
 }
