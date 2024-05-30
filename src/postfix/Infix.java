@@ -18,19 +18,19 @@ public class Infix {
                 operatorStack.push(token);
             } else if (token == ')') {
                 while (!operatorStack.isEmpty() && operatorStack.top() != '(') {
-                    postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
+                    postfix.append(operatorStack.pop()).append(' ');
                 }
-                operatorStack.pop(); // Remove the '(' from the stack
+                operatorStack.pop();
             } else if (isOperator(token)) {
                 while (!operatorStack.isEmpty() && precedence(token) <= precedence(operatorStack.top())) {
-                    postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
+                    postfix.append(operatorStack.pop()).append(' ');
                 }
                 operatorStack.push(token);
             }
         }
 
         while (!operatorStack.isEmpty()) {
-            postfix.append(operatorStack.pop()).append(' '); // Append operator with a space
+            postfix.append(operatorStack.pop()).append(' ');
         }
 
         return postfix.toString().trim(); // Remove trailing space and return
